@@ -28,7 +28,6 @@ public class AlarmBroadcast extends BroadcastReceiver {
         remoteViews.setTextViewText(R.id.qoutation,userGoal);
         remoteViews.setTextViewText(R.id.time, new SimpleDateFormat("hh:mm").format(calendar.getTime()));
         String userName = settings.getString("name",null);
-        Log.e("Error","Time Hour:"+calendar.getTime().getHours());
 
         if(calendar.getTime().getHours()<12){
          remoteViews.setTextViewText(R.id.name, "Good Morning,"+userName);

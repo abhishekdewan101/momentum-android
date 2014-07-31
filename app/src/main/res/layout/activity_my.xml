@@ -43,4 +43,24 @@
         android:layout_marginTop="133dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/weatherCondition"
+        android:src="@drawable/sunny"
+        android:scaleType="fitXY"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/weather" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="63 F"
+        android:textSize="35dp"
+        android:id="@+id/weather"
+        android:layout_alignBottom="@+id/weatherCondition"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

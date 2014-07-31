@@ -21,11 +21,10 @@ public class ChangeBackgroundBroadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         //You can do the processing here update the widget/remote views.
-        Log.e("Error","ChangeBackgroundBroadcast");
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.activity_my);
         int backgroundFile = new Random().nextInt((10));
         //int backgroundFile = 1;
-        Log.e("Background File", backgroundFile + "");
+
         ArrayList<Integer> backgroundImages = new ArrayList<Integer>();
         backgroundImages.add(R.drawable.pic1);
         backgroundImages.add(R.drawable.pic2);

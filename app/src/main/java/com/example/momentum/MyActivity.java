@@ -48,6 +48,10 @@ public class MyActivity extends AppWidgetProvider {
             Intent backgroundIntent = new Intent(context, ChangeBackgroundBroadcast.class);
             PendingIntent backgroundPI = PendingIntent.getBroadcast(context, 0, backgroundIntent, 0);
 
+            Intent weatherIntent = new Intent(context, WeatherBroadcast.class);
+            PendingIntent weatherPI = PendingIntent.getBroadcast(context, 0, weatherIntent, 0);
+
+
             Intent dailyIntent = new Intent(context,Daily.class);
             PendingIntent dailyPI = PendingIntent.getActivity(context,0,dailyIntent,0);
             Date currentDate = Calendar.getInstance().getTime();
@@ -66,7 +70,8 @@ public class MyActivity extends AppWidgetProvider {
 
             am.setRepeating(AlarmManager.RTC, Calendar.getInstance().getTimeInMillis() + alarmDifference, (1000 * 60 * 1), pi);
             am.setRepeating(AlarmManager.RTC,Calendar.getInstance().getTimeInMillis(),(1000*60*60),backgroundPI);
-            am.setRepeating(AlarmManager.RTC,Calendar.getInstance().getTimeInMillis()+Math.abs(differenceTime),(1000*60*60*24),dailyPI);
+            am.setRepeating(AlarmManager.RTC,Calendar.getInstance().getTimeInMillis(),(1000*60*60*24),dailyPI);
+            am.setRepeating(AlarmManager.RTC,Calendar.getInstance().getTimeInMillis()+10,(1000*60*1),weatherPI);
 
 
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.activity_my);
