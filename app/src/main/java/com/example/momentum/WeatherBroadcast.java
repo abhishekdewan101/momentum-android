@@ -36,7 +36,7 @@ public class WeatherBroadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         //You can do the processing here update the widget/remote views.
-
+        Log.e("Error","WeatherBroadcast Entered");
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.activity_my);
         String weather = getWeather(context);
         remoteViews.setTextViewText(R.id.weather,weather);
@@ -50,87 +50,50 @@ public class WeatherBroadcast extends BroadcastReceiver {
 
         GPSTracker gpsTracker = new GPSTracker(context);
 
-        if(gpsTracker.canGetLocation()){
-            Log.e("Lattitude",gpsTracker.getLatitude()+"");
-            Log.e("Longitude",gpsTracker.getLongitude()+"");
-        }
+        final Double longitude = gpsTracker.getLongitude();
+        final Double lattitude = gpsTracker.getLatitude();
+
+        final String weatherURL = "http://api.openweathermap.org/data/2.5/weather?";
+        final String APIKEY  = "APPID=76c8832dd3db27a491f30b597fefb3c0";
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String beaconName ="";
+                HttpClient client = new DefaultHttpClient();
+                HttpGet httpGet = new HttpGet(weatherURL+"lat="+lattitude.toString()+"&lon="+longitude.toString()+"&"+APIKEY);
+                StringBuilder builder =new StringBuilder();
+                try {
+                    HttpResponse response = client.execute(httpGet);
+                    StatusLine statusLine = response.getStatusLine();
+                    int statusCode = statusLine.getStatusCode();
+                    if (statusCode == 200) {
+                        HttpEntity entity = response.getEntity();
+                        InputStream content = entity.getContent();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            builder.append(line);
+                        }
+                    } else {
+                        Log.e("ERROR IN READING DATA", "FAILED TO GET ANY DATA");
+                    }
+                } catch (ClientProtocolException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    JSONObject jsonObject = new JSONObject(builder.toString());
+                    Log.e("Json Data",jsonObject.getString("main"));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
 
-
-
-        String weather = "";
-//        String WEATHER_MANAGER ="http://api.worldweatheronline.com/free/v1/weather.ashx?";
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                String beaconName ="";
-//                HttpClient client = new DefaultHttpClient();
-//                HttpGet httpGet = new HttpGet("http://"+SpaceManager+"/beacons?major="+major+"&minor="+minor);
-//                StringBuilder builder =new StringBuilder();
-//                try {
-//                    HttpResponse response = client.execute(httpGet);
-//                    StatusLine statusLine = response.getStatusLine();
-//                    int statusCode = statusLine.getStatusCode();
-//                    if (statusCode == 200) {
-//                        HttpEntity entity = response.getEntity();
-//                        InputStream content = entity.getContent();
-//                        BufferedReader reader = new BufferedReader(new InputStreamReader(content));
-//                        String line;
-//                        while ((line = reader.readLine()) != null) {
-//                            builder.append(line);
-//                        }
-//                    } else {
-//                        Log.e("ERROR IN READING DATA", "FAILED TO GET ANY DATA");
-//                    }
-//                } catch (ClientProtocolException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//                try {
-//                    JSONArray jsonArray = new JSONArray(builder.toString());
-//                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-//
-//                    beaconName = jsonObject.getString("name");
-//
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//
-//
-//
-//                try {
-//                    HttpGet httpGet1 = new HttpGet("http://"+SpaceManager+"/users/setactive?uniqueid="+ URLEncoder.encode(USER_ID, "utf-8")+"&activebeacon="+URLEncoder.encode(beaconName,"utf-8"));
-//                    HttpResponse response = client.execute(httpGet1);
-//                } catch (ClientProtocolException e) {
-//                    e.printStackTrace();
-//                    somethingWrong = true;
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    somethingWrong = true;
-//                }
-//            }
-//        }).start();
-//        somethingFound = true;
-//    }else{
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                HttpClient client = new DefaultHttpClient();
-//                HttpGet httpGet1 = new HttpGet("http://"+SpaceManager+"/users/setpassive?uniqueid="+USER_ID);
-//                try {
-//                    HttpResponse response = client.execute(httpGet1);
-//                } catch (ClientProtocolException e) {
-//                    e.printStackTrace();
-//                    somethingWrong = true;
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                    somethingWrong = true;
-//                }
-//            }
-//        }).start();
-
-        return weather;
+        return null;
     }
 }

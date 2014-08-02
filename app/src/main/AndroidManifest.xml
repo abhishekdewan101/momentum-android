@@ -24,6 +24,7 @@
         </receiver>
         <receiver android:name=".AlarmBroadcast" />
         <receiver android:name=".ChangeBackgroundBroadcast" />
+        <receiver android:name=".WeatherBroadcast"/>
 
         <activity
             android:name=".Daily"
